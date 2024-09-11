@@ -25,6 +25,7 @@ bulgarian_months = {
 
 existing_data: dict = {}
 
+
 # Want to test some stuff with this
 def memoize(func):
     cache = {}
@@ -42,6 +43,7 @@ def memoize(func):
 
 
 def full_export():
+    """Full scrapes 2020 to 2024. Prints redirected to an output file"""
     start_total = perf_counter()
 
     years = [2020, 2021, 2022, 2023, 2024]
@@ -71,7 +73,7 @@ def full_export():
                 print(f"[Main] {len(existing_data)} entries loaded")
 
             # Start the scraping process
-            x = Scraper(year=year)
+            x = Scraper(year=year, pages=0)
 
             if x.total_pages > 0:
                 scraped = x.web_scraper()
@@ -94,7 +96,7 @@ def full_export():
 
 class Scraper:
     def __init__(self, year: int, pages: int):
-        """Sending 0 or less as pages will scrape the whole year provided"""
+        """Sending 0 or less as `pages` will scrape the whole year provided"""
         self.url: str = f"https://vikpz.com/{year}/"
         self.url_articles: str = f"https://vikpz.com/{year}/page/"
         self.year: int = year
@@ -115,12 +117,10 @@ class Scraper:
             self.get_pages()
 
     def get_pages(self) -> dict:
-        # url = f"https://vikpz.com/{year}/"
-
-        # Зареждане на страницата
+        # Load the page
         response = requests.get(self.url)
         if response.status_code == 200:
-            # Парсване на HTML съдържанието
+            # Parse the HTML content
             soup = BeautifulSoup(response.content, "html.parser")
 
             # Get navigation links data (next page)
@@ -149,17 +149,13 @@ class Scraper:
                 )
 
                 # Print the extracted pages data
-                # print(f"Current Page: {current_page}")
                 print(f"[Pages] Total: {self.total_pages}")
-                # print(f"Next Page Link: {next_page_link}")
 
                 data = {
                     "current_page": self.current_page,
                     "next_page_url": next_page_link,
                     "total_pages": self.total_pages,
                 }
-
-                # self.web_scraper()
 
                 return data
             else:
@@ -193,8 +189,6 @@ class Scraper:
                 # Find all article tags
                 articles = soup.find_all("article")
                 print(f"[Scraper] Found {len(articles)} articles")
-
-                # dump_to_file(articles, f"articles_page_{current_page}.txt")
 
                 self.scraped_data = self.article_looper(articles)
 
@@ -320,37 +314,26 @@ class Scraper:
                 or len(formatted_place.split()) > 2
             ):
                 gpt_extractor = OpenAIExtractor()
-                gpt_response = json.loads(
-                    gpt_extractor.extract_data(entry_summary, formatted_date.strip())
-                )
-                ai_extract = True
-                print(
-                    f"[GPT] Place Old: {formatted_place} | New: {gpt_response['places']}"
-                    # if formatted_place == None or len(formatted_place.split()) > 2
-                    # else f"[GPT] Formatted Place is fine ({formatted_place})"
-                )
-                print(
-                    f"[GPT] Period Old: {formatted_period} | New: {gpt_response['period']}"
-                    # if "N/A" in formatted_period
-                    # or re.search(self.period_pattern_check, formatted_period) == None
-                    # else f"[GPT] Formatted Period is fine ({formatted_period})"
-                )
-                formatted_place = (
-                    ", ".join(gpt_response["places"])
-                    # if formatted_place == None
-                    # else formatted_place
-                )
-                formatted_period = (
-                    gpt_response["period"]
-                    # if "N/A" in formatted_period
-                    # else formatted_period
-                )
-                with open(
-                    f"./logs/gpt/{article_id}_{gpt_extractor.model}.json",
-                    "w",
-                    encoding="utf-8",
-                ) as f:
-                    json.dump(gpt_response, f, ensure_ascii=False, indent=4)
+                if gpt_extractor.valid_key:
+                    gpt_response = json.loads(
+                        gpt_extractor.extract_data(
+                            entry_summary, formatted_date.strip()
+                        )
+                    )
+                    ai_extract = True
+                    print(
+                        f"[GPT] Place Old: {formatted_place} | New: {gpt_response['places']}"
+                    )
+                    print(
+                        f"[GPT] Period Old: {formatted_period} | New: {gpt_response['period']}"
+                    )
+                    formatted_place = ", ".join(gpt_response["places"])
+                    formatted_period = gpt_response["period"]
+
+                    self.dump_to_file(
+                        gpt_response,
+                        f"./logs/gpt/{article_id}_{gpt_extractor.model}.json",
+                    )
 
             self.scraped_data[article_id] = {
                 "day": ht_day.strip(),
@@ -380,6 +363,7 @@ class Scraper:
         return self.scraped_data
 
     def dump_to_file(self, new_dump: dict, file_name: str):
+        """Appends data to a JSON or creates a new one. Writes all other logs in a new file"""
         print(f"[File Dumper] Dumping {len(new_dump)} entries to {file_name}")
 
         if "json" in file_name:
@@ -446,8 +430,6 @@ def input_to_db(data: dict):
             print(
                 f"[DB] Could NOT add '{key}'\n{insert_query if item['update_entry'] == False else update_query}"
             )
-
-        # print("-" * 50)
 
     db.close_connection()
     db_end = perf_counter()

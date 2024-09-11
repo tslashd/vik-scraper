@@ -20,6 +20,7 @@ class OpenAIExtractor:
     def __init__(self):
         openai.api_key = api_key
         self.model = "gpt-4o-mini"  # less money per call
+        self.valid_key = False if api_key is not None or api_key == "MY_OPENAI_API_KEY" else True
         # self.model = "gpt-4o" # too expensive
         # self.model = "gpt-3.5-turbo",  # or gpt-4 if you have access to it
 
