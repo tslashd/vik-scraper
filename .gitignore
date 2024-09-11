@@ -1,0 +1,7 @@
+venv
+.env
+__pycache__
+_old
+logs/console/*.log
+logs/data/*.json
+logs/gpt/*.json
