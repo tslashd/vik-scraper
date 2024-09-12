@@ -57,7 +57,9 @@ def full_export():
             os.remove(f"{logs_path}/logs/console/output_{year}.txt")
 
         # Redirect stdout to a file
-        with open(f"{logs_path}/logs/console/output_{year}.txt", "w", encoding="utf-8") as file:
+        with open(
+            f"{logs_path}/logs/console/output_{year}.txt", "w", encoding="utf-8"
+        ) as file:
             sys.stdout = file
 
             # Initiate to get the model name which is used for table names
@@ -215,7 +217,8 @@ class Scraper:
 
         if len(self.scraped_data) >= 1:
             self.dump_to_file(
-                self.scraped_data, f"{logs_path}/logs/data/scraped_data_{self.year}_full.json"
+                self.scraped_data,
+                f"{logs_path}/logs/data/scraped_data_{self.year}_full.json",
             )
         return self.scraped_data
 
