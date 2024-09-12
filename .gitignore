@@ -1,5 +1,6 @@
 venv
 .env
+test.py
 __pycache__
 _old
 logs/console/*.log

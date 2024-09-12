@@ -24,6 +24,7 @@ bulgarian_months = {
 }
 
 existing_data: dict = {}
+logs_path: str = os.path.dirname(__file__)
 
 
 # Want to test some stuff with this
@@ -52,11 +53,11 @@ def full_export():
     for year in years:
         year_start = perf_counter()
         # Remove the file if it already exists
-        if os.path.exists(f"./logs/console/output_{year}.txt"):
-            os.remove(f"./logs/console/output_{year}.txt")
+        if os.path.exists(f"{logs_path}/logs/console/output_{year}.txt"):
+            os.remove(f"{logs_path}/logs/console/output_{year}.txt")
 
         # Redirect stdout to a file
-        with open(f"./logs/console/output_{year}.txt", "w", encoding="utf-8") as file:
+        with open(f"{logs_path}/logs/console/output_{year}.txt", "w", encoding="utf-8") as file:
             sys.stdout = file
 
             # Initiate to get the model name which is used for table names
@@ -214,7 +215,7 @@ class Scraper:
 
         if len(self.scraped_data) >= 1:
             self.dump_to_file(
-                self.scraped_data, f"./logs/data/scraped_data_{self.year}_full.json"
+                self.scraped_data, f"{logs_path}/logs/data/scraped_data_{self.year}_full.json"
             )
         return self.scraped_data
 
@@ -332,7 +333,7 @@ class Scraper:
 
                     self.dump_to_file(
                         gpt_response,
-                        f"./logs/gpt/{article_id}_{gpt_extractor.model}.json",
+                        f"{logs_path}/logs/gpt/{article_id}_{gpt_extractor.model}.json",
                     )
 
             self.scraped_data[article_id] = {
