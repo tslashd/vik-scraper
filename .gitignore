@@ -3,6 +3,7 @@ venv
 test.py
 __pycache__
 _old
+logs/console/*.txt
 logs/console/*.log
 logs/data/*.json
 logs/gpt/*.json
