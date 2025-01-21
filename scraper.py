@@ -443,7 +443,10 @@ def input_to_db(data: dict):
 if __name__ == "__main__":
     start_total = perf_counter()
 
+    # full_export()
+
     year = datetime.now().year
+    # year = 2025
 
     # Initiate to get the model name which is used for table names
     gpt = OpenAIExtractor()
