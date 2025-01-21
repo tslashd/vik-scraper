@@ -44,10 +44,10 @@ def memoize(func):
 
 
 def full_export():
-    """Full scrapes 2020 to 2024. Prints redirected to an output file"""
+    """Full scrapes 2020 to 2025. Prints redirected to an output file"""
     start_total = perf_counter()
 
-    years = [2020, 2021, 2022, 2023, 2024]
+    years = [2020, 2021, 2022, 2023, 2024, 2025]
     # years = [2020]
 
     for year in years:
