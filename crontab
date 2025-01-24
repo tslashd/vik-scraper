@@ -1,1 +1,2 @@
-0 * * * * python /app/scraper.py >> /app/logs/console/$(date +\%Y-\%m-\%d_\%H:\%M:\%S).log 2>&1
+0 * * * * /usr/local/bin/python3 /app/scraper.py >> /app/logs/console/$(date +\%Y-\%m-\%d_\%H:\%M:\%S).log 2>&1
+
