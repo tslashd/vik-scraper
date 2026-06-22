@@ -7,3 +7,5 @@ logs/console/*.txt
 logs/console/*.log
 logs/data/*.json
 logs/gpt/*.json
+CLAUDE.md
+.claude/settings.local.json

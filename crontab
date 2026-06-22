@@ -1,2 +1,4 @@
-0 * * * * /usr/local/bin/python3 /app/scraper.py >> /app/logs/console/$(date +\%Y-\%m-\%d_\%H:\%M:\%S).log 2>&1
+PYTHONUNBUFFERED=1
+0 * * * * /usr/local/bin/python3 /app/scraper.py 2>&1 | tee /app/logs/console/$(date +\%Y-\%m-\%d_\%H\%M\%S).log >> /app/logs/console/cron.log
+0 0 * * 0 find /app/logs/console -name "*.log" -mtime +30 -delete
 

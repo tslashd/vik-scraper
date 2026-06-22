@@ -1,0 +1,22 @@
+# Local dev environment
+.env
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs are mounted as a volume anyway
+logs/
+
+# Git history
+.git/
+
+# Files not needed inside the image
+scraper_old.py
+db_script/
+TODO.md
+CLAUDE.md
+.env.example
+docker-compose.yml
+*.tar
+*.md

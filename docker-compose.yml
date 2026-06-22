@@ -1,0 +1,11 @@
+services:
+  scraper:
+    build: .
+    environment:
+      - host=${host}
+      - user=${user}
+      - password=${password}
+      - database=${database}
+      - openai_api_key=${openai_api_key}
+    volumes:
+      - ./logs:/app/logs
