@@ -35,8 +35,7 @@ HEALTHCHECK --interval=5m --timeout=10s --start-period=2m \
 
 # Export runtime env vars so cron can see them, run an initial scrape, then hand off to cron.
 # tail -F forwards cron.log to Docker stdout so output is visible in Portainer Logs.
-CMD sh -c "env >> /etc/environment && \
-    mkdir -p /app/logs/console /app/logs/data /app/logs/gpt && \
+CMD sh -c "mkdir -p /app/logs/console /app/logs/data /app/logs/gpt && \
     echo '[Container] Starting initial scrape...' && \
     python3 /app/scraper.py 2>&1 | tee /app/logs/console/startup.log && \
     echo '[Container] Startup scrape done. Cron scheduled — scraper will run hourly.' && \
