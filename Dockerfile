@@ -30,7 +30,7 @@ RUN chmod 0644 /etc/cron.d/scraper-cron && crontab /etc/cron.d/scraper-cron
 
 # Health check — verify a log was written in the last ~2 hours
 # --start-period gives the startup scrape time to finish before health is checked
-HEALTHCHECK --interval=120m --timeout=10s --start-period=10m \
+HEALTHCHECK --interval=5m --timeout=10s --start-period=2m \
     CMD find /app/logs/console -name "*.log" -mmin -130 | grep -q . || exit 1
 
 # Export runtime env vars so cron can see them, run an initial scrape, then hand off to cron.
